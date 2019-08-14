@@ -16,7 +16,6 @@ class Artist
     VALUES ($1)
     RETURNING id
     "
-
     values = [@name]
     result  = SqlRunner.run(sql, values)
     @id = result[0]["id"].to_i
@@ -39,9 +38,7 @@ class Artist
     albums_data = SqlRunner.run(sql, values)
     albums = albums_data.map { |album_data| Album.new(album_data)}
     return albums
-
   end
-
 
   def update
     sql = "
@@ -60,6 +57,17 @@ class Artist
     values = [@id]
     SqlRunner.run(sql, values)
   end
+  #
+  def Artist.find(id) # READ
+      sql = "SELECT * FROM artists WHERE id = $1"
+      values = [id]
+      results_array = SqlRunner.run(sql, values)
+      return nil if results_array.first() == nil
+      artist_hash = results_array[0]
+      found_artist = Artist.new(artist_hash)
+      return found_artist
+    end
+
 
 
 end
